@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const {z} = require("zod");
 
-mongoose.connect("mongodb+srv://pawank050520k:Pawank050520k%40@cluster0.rs0up.mongodb.net/todo-database");
+mongoose.connect("");
 
 const app = express();
 app.use(express.json());
