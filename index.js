@@ -1,10 +1,10 @@
 const express = require("express");
 const { UserModel, TodoModel} = require("./db");
+const {auth, JWT_SECRET} = require("./auth");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const JWT_SECRET = "asdfdfas123";
 
+const bcrypt = require("bcrypt");
 const {z} = require("zod");
 
 mongoose.connect("mongodb+srv://pawank050520k:Pawank050520k%40@cluster0.rs0up.mongodb.net/todo-database");
@@ -75,12 +75,32 @@ app.post("/signin", async function(req, res){
     }
 });
 
-app.post("/todo", function(req, res){
+app.post("/todo", auth, async function(req, res){
+    const userId = req.userId;
+    const title = req.body.title;
+    const done = req.body.done;
 
+    await TodoModel.create({
+        userId,
+        title,
+        done
+    })
+
+    res.json({
+        message: "Todo created"
+    })
 });
 
-app.get("/todos", function(req, res){
+app.get("/todos", auth, async function(req, res){
+    const userId = req.userId;
 
+    const todos = await TodoModel.find({
+        userId
+    })
+
+    res.json({
+        todos
+    })
 });
 
 app.listen(3000, () => {
